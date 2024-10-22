@@ -1,4 +1,5 @@
 const readline = require('readline');
+//The script uses readline to get user input, then returns harmonically relevant chords for the provided key.
 
 const chordSets = {
     MAJ1: [
@@ -228,6 +229,8 @@ const chordSets = {
 };
 
 function circleOfFifths(chordKey, relativeMinor = false) {
+    // The circleOfFifths() function determines the relative minor key, clockwise, and counterclockwise keys for a given major key, providing information about its harmonic relationships.
+
     const majorKeys = ['C', 'G', 'D', 'A', 'E', 'B', 'Gb', 'Db', 'Ab', 'Eb', 'Bb', 'F'];
     const minorKeys = ['Am', 'Em', 'Bm', 'F#m', 'C#m', 'G#m', 'Ebm', 'Bbm', 'Fm', 'Cm', 'Gm', 'Dm'];
     const keyAliases = { 'C#': 'Db', 'D#': 'Eb', 'F#': 'Gb', 'G#': 'Ab', 'A#': 'Bb', 'Cb': 'B', 'Fb': 'E' };
@@ -257,11 +260,13 @@ function circleOfFifths(chordKey, relativeMinor = false) {
 }
 
 function findHarmonicallyRelevantChords(chord) {
+    // The findHarmonicallyRelevantChords() function identifies chords that are harmonically related to the provided chord, searching across all sets.
     const relevantChords = [...chordSets.MAJ1, ...chordSets.MAJ2, ...chordSets.MAJ3, ...chordSets.MAJ4, ...chordSets.MAJ5, ...chordSets.MAJ6, ...chordSets.MAJ7, ...chordSets.MAJ8, ...chordSets.MIN1, ...chordSets.MIN2, ...chordSets.MIN3, ...chordSets.MIN4, ...chordSets.MIN5, ...chordSets.MIN6, ...chordSets.MIN7, ...chordSets.MIN8].filter(item => item.chord.includes(chord) || item.chord.includes(chord.replace('b', '#')) || item.chord.includes(chord.replace('#', 'b')) || item.chord.includes(chord.replace(/mi|sus|add/, '')));
     return relevantChords.length > 0 ? relevantChords : "No harmonically relevant chords found.";
 }
 
 function findChordsForKey(key) {
+    //  The findChordsForKey() function uses the circleOfFifths() to find relevant chords for a given key and also finds chords for its relative minor, clockwise, and counterclockwise keys.
     const harmonics = circleOfFifths(key);
     const harmonicallyRelevantChords = {
         relativeMinor: harmonics.relativeMinor,
