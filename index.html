@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chord Finder</title>
+</head>
+<body>
+    <h1>Chord Finder</h1>
+    <input type="text" id="userInput" placeholder="Enter key or chord">
+    <button onclick="findChords()">Submit</button>
+    <pre id="output"></pre>
+
+    <script>
+        async function findChords() {
+            const userInput = document.getElementById('userInput').value;
+            const response = await fetch('/process', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ input: userInput })
+            });
+            const result = await response.json();
+            document.getElementById('output').textContent = JSON.stringify(result, null, 2);
+        }
+    </script>
+</body>
+</html>
