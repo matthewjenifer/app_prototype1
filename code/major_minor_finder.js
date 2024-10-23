@@ -5,7 +5,7 @@ function extractInterval(chord, root) {
         'Db': 'C#', 'Eb': 'D#', 'Gb': 'F#', 'Ab': 'G#', 'Bb': 'A#',
         'C#': 'Db', 'D#': 'Eb', 'F#': 'Gb', 'G#': 'Ab', 'A#': 'Bb'
     };
-    
+
     chord = chord.trim();
     root = enharmonicMap[root] || root;
     const slashIndex = chord.indexOf('/');
@@ -49,7 +49,7 @@ function transposeChord(interval, qualities, newRoot, bassInterval = null) {
         'Db': 'C#', 'Eb': 'D#', 'Gb': 'F#', 'Ab': 'G#', 'Bb': 'A#',
         'C#': 'Db', 'D#': 'Eb', 'F#': 'Gb', 'G#': 'Ab', 'A#': 'Bb'
     };
-    
+
     newRoot = enharmonicMap[newRoot] || newRoot;
     const newRootIndex = notes.indexOf(newRoot);
     const newBaseIndex = (newRootIndex + interval) % 12;
@@ -161,13 +161,30 @@ function getAdjacentChords(chord) {
         'Db': 'C#', 'Eb': 'D#', 'Gb': 'F#', 'Ab': 'G#', 'Bb': 'A#',
         'C#': 'Db', 'D#': 'Eb', 'F#': 'Gb', 'G#': 'Ab', 'A#': 'Bb'
     };
+
     let baseNote = chord.replace(/(mi|#|b|add|sus|maj|dim|aug|6|7|9|11|13)/g, '').trim();
     baseNote = enharmonicMap[baseNote] || baseNote;
     const isMinor = /mi/.test(chord);
-    const majorKey = isMinor ? Object.keys(minorMap).find(key => minorMap[key] === baseNote) : baseNote;
+    let majorKey = baseNote;
 
+    // If the chord is minor, find the corresponding major key
+    if (isMinor) {
+        majorKey = Object.keys(minorMap).find(key => minorMap[key] === baseNote);
+    }
+
+    // Convert majorKey to enharmonic equivalent if needed
+    majorKey = enharmonicMap[majorKey] || majorKey;
+
+    // If majorKey is not found in circleOfFifths, return null values
     const index = circleOfFifths.indexOf(majorKey);
-    if (index === -1) return { clockwiseMajor: null, counterClockwiseMajor: null, clockwiseMinor: null, counterClockwiseMinor: null };
+    if (index === -1) {
+        return {
+            clockwiseMajor: null,
+            counterClockwiseMajor: null,
+            clockwiseMinor: null,
+            counterClockwiseMinor: null
+        };
+    }
 
     const clockwiseMajor = circleOfFifths[(index + 1) % circleOfFifths.length];
     const counterClockwiseMajor = circleOfFifths[(index - 1 + circleOfFifths.length) % circleOfFifths.length];
@@ -176,6 +193,7 @@ function getAdjacentChords(chord) {
 
     return { clockwiseMajor, counterClockwiseMajor, clockwiseMinor, counterClockwiseMinor };
 }
+
 
 // Accept user input from the console
 const readline = require('readline');
