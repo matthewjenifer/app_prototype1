@@ -147,6 +147,36 @@ function getRelativeChord(chord) {
     return relativeMap[isMinor ? baseNote + 'm' : baseNote] || null;
 }
 
+// Function to get the clockwise and counterclockwise chords from the circle of fifths
+function getAdjacentChords(chord) {
+    const circleOfFifths = [
+        'C', 'G', 'D', 'A', 'E', 'B', 'Gb', 'Db', 'Ab', 'Eb', 'Bb', 'F'
+    ];
+    const minorMap = {
+        'C': 'Am', 'G': 'Em', 'D': 'Bm', 'A': 'F#m', 'E': 'C#m',
+        'B': 'G#m', 'Gb': 'Ebm', 'Db': 'Bbm', 'Ab': 'Fm', 'Eb': 'Cm',
+        'Bb': 'Gm', 'F': 'Dm'
+    };
+    const enharmonicMap = {
+        'Db': 'C#', 'Eb': 'D#', 'Gb': 'F#', 'Ab': 'G#', 'Bb': 'A#',
+        'C#': 'Db', 'D#': 'Eb', 'F#': 'Gb', 'G#': 'Ab', 'A#': 'Bb'
+    };
+    let baseNote = chord.replace(/(mi|#|b|add|sus|maj|dim|aug|6|7|9|11|13)/g, '').trim();
+    baseNote = enharmonicMap[baseNote] || baseNote;
+    const isMinor = /mi/.test(chord);
+    const majorKey = isMinor ? Object.keys(minorMap).find(key => minorMap[key] === baseNote) : baseNote;
+
+    const index = circleOfFifths.indexOf(majorKey);
+    if (index === -1) return { clockwiseMajor: null, counterClockwiseMajor: null, clockwiseMinor: null, counterClockwiseMinor: null };
+
+    const clockwiseMajor = circleOfFifths[(index + 1) % circleOfFifths.length];
+    const counterClockwiseMajor = circleOfFifths[(index - 1 + circleOfFifths.length) % circleOfFifths.length];
+    const clockwiseMinor = minorMap[clockwiseMajor];
+    const counterClockwiseMinor = minorMap[counterClockwiseMajor];
+
+    return { clockwiseMajor, counterClockwiseMajor, clockwiseMinor, counterClockwiseMinor };
+}
+
 // Accept user input from the console
 const readline = require('readline');
 const rl = readline.createInterface({
@@ -163,7 +193,8 @@ rl.question('Enter the new root note to transpose to: ', (newRoot) => {
             const position = chordSet.indexOf(currentChord);
             if (position !== -1) {
                 const relativeChord = getRelativeChord(currentChord);
-                console.log(`Chord found in set: ${setName}, position: ${position}, relative chord: ${relativeChord}`);
+                const { clockwiseMajor, counterClockwiseMajor, clockwiseMinor, counterClockwiseMinor } = getAdjacentChords(currentChord);
+                console.log(`Chord found in set: ${setName}, position: ${position}, relative chord: ${relativeChord}, clockwise major: ${clockwiseMajor}, counter clockwise major: ${counterClockwiseMajor}, clockwise minor: ${clockwiseMinor}, counter clockwise minor: ${counterClockwiseMinor}`);
                 found = true;
                 break;
             }
