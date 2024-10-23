@@ -1,43 +1,40 @@
 // Function to extract interval information from the root note
 function extractInterval(chord, root) {
-    /**
-     * Extracts the interval information of a chord given a root note.
-     *
-     * @param {string} chord - The chord to analyze.
-     * @param {string} root - The root note of the key.
-     * @returns {Object} - The interval in semitones from the root and any additional chord qualities.
-     */
-    // Define the list of notes in chromatic order, including enharmonic equivalents
     const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
     const enharmonicMap = {
         'Db': 'C#', 'Eb': 'D#', 'Gb': 'F#', 'Ab': 'G#', 'Bb': 'A#',
         'C#': 'Db', 'D#': 'Eb', 'F#': 'Gb', 'G#': 'Ab', 'A#': 'Bb'
     };
     
-    // Normalize root and base note to handle enharmonic equivalents
+    chord = chord.trim();
     root = enharmonicMap[root] || root;
     const slashIndex = chord.indexOf('/');
     let baseNote = chord;
     let bassNote = null;
 
     if (slashIndex !== -1) {
-        baseNote = chord.slice(0, slashIndex);
-        bassNote = chord.slice(slashIndex + 1);
+        baseNote = chord.slice(0, slashIndex).trim();
+        bassNote = chord.slice(slashIndex + 1).trim();
         bassNote = enharmonicMap[bassNote] || bassNote;
+        bassNote = bassNote.replace(/[0123456789#b]/g, '').trim();
     }
 
-    baseNote = baseNote.replace(/[0123456789#bmiaddsus]/g, '');
+    baseNote = baseNote.replace(/[0123456789#bmiaddsus\(\),\+]/g, '').trim();
     const normalizedBaseNote = enharmonicMap[baseNote] || baseNote;
-    const qualities = chord.match(/(mi|sus|add|maj|dim|aug|6|7|9|11|13|b|#)/g) || []; // Extract qualities like 'mi', 'sus', 'add'
-    
-    // Calculate the interval from the root note to the chord's base note
+    const qualities = chord.match(/(mi|sus|add|maj|dim|aug|6|7|9|11|13|b|#|\+)/g) || [];
+
     const rootIndex = notes.indexOf(root);
+    if (!notes.includes(normalizedBaseNote)) {
+        throw new Error(`Invalid base note '${normalizedBaseNote}' in chord '${chord}'`);
+    }
     const baseIndex = notes.indexOf(normalizedBaseNote);
     const interval = (baseIndex - rootIndex + 12) % 12;
 
-    // Calculate interval for bass note if present
     let bassInterval = null;
     if (bassNote) {
+        if (!notes.includes(bassNote)) {
+            throw new Error(`Invalid bass note '${bassNote}' in chord '${chord}'`);
+        }
         const bassIndex = notes.indexOf(bassNote);
         bassInterval = (bassIndex - rootIndex + 12) % 12;
     }
@@ -45,67 +42,50 @@ function extractInterval(chord, root) {
     return { interval, qualities, bassInterval };
 }
 
-// Function to transpose a chord based on interval and qualities
+// Function to transpose a chord
 function transposeChord(interval, qualities, newRoot, bassInterval = null) {
-    /**
-     * Transposes a chord to a new root, preserving the interval and chord qualities.
-     *
-     * @param {number} interval - The interval from the original root.
-     * @param {Array<string>} qualities - The list of chord qualities to preserve.
-     * @param {string} newRoot - The new root note to transpose to.
-     * @param {number|null} bassInterval - The interval for the bass note if present.
-     * @returns {string} - The transposed chord.
-     */
-    // Define the list of notes in chromatic order, including enharmonic equivalents
     const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
     const enharmonicMap = {
         'Db': 'C#', 'Eb': 'D#', 'Gb': 'F#', 'Ab': 'G#', 'Bb': 'A#',
         'C#': 'Db', 'D#': 'Eb', 'F#': 'Gb', 'G#': 'Ab', 'A#': 'Bb'
     };
     
-    // Normalize new root to handle enharmonic equivalents
     newRoot = enharmonicMap[newRoot] || newRoot;
-    
-    // Find the new base note by adding the interval to the new root
     const newRootIndex = notes.indexOf(newRoot);
     const newBaseIndex = (newRootIndex + interval) % 12;
     let newBaseNote = notes[newBaseIndex];
 
-    // If the original note was an enharmonic, maintain the enharmonic spelling if possible
-    if (enharmonicMap[newBaseNote] && Object.values(enharmonicMap).includes(newRoot)) {
-        newBaseNote = enharmonicMap[newBaseNote];
-    }
-
-    // Reconstruct the chord by appending the qualities to the new base note
     let transposedChord = newBaseNote + qualities.join('');
 
-    // Add the transposed bass note if present
     if (bassInterval !== null) {
         const newBassIndex = (newRootIndex + bassInterval) % 12;
         let newBassNote = notes[newBassIndex];
-        if (enharmonicMap[newBassNote] && Object.values(enharmonicMap).includes(newRoot)) {
-            newBassNote = enharmonicMap[newBassNote];
-        }
         transposedChord += '/' + newBassNote;
     }
 
     return transposedChord;
 }
 
-// Function to transpose an entire chord set
-function transposeChordSet(chordSet, root, newRoot) {
-    /**
-     * Transposes an entire chord set to a new root.
-     *
-     * @param {Array<string>} chordSet - The chord set to transpose.
-     * @param {string} root - The root note of the key.
-     * @param {string} newRoot - The new root note to transpose to.
-     * @returns {Array<string>} - The transposed chord set.
-     */
-    return chordSet.map(chord => {
-        const { interval, qualities, bassInterval } = extractInterval(chord, root);
-        return transposeChord(interval, qualities, newRoot, bassInterval);
-    });
+// Function to transpose all chord sets and store them
+function transposeAllChordSets(newRoot) {
+    const transposedChordSets = {};
+    for (let setName in chordSets) {
+        transposedChordSets[setName] = transposeChordSet(chordSets[setName], "C", newRoot);
+    }
+    return transposedChordSets;
+}
+
+// Function to transpose a single chord set
+function transposeChordSet(chordSet, originalRoot, newRoot) {
+    const transposedSet = [];
+    for (let chord of chordSet) {
+        const intervalData = extractInterval(chord, originalRoot);
+        const transposedChord = transposeChord(
+            intervalData.interval, intervalData.qualities, newRoot, intervalData.bassInterval
+        );
+        transposedSet.push(transposedChord);
+    }
+    return transposedSet;
 }
 
 // Established chord sets
@@ -140,6 +120,47 @@ function transposeAllChordSets(newRoot) {
     }
 }
 
+// Function to get the Roman numeral for a chord in the context of a key
+function getRomanNumeral(chord, root) {
+    const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    const majorScaleDegrees = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii°'];
+    const enharmonicMap = {
+        'Db': 'C#', 'Eb': 'D#', 'Gb': 'F#', 'Ab': 'G#', 'Bb': 'A#',
+        'C#': 'Db', 'D#': 'Eb', 'F#': 'Gb', 'G#': 'Ab', 'A#': 'Bb'
+    };
+    
+    let baseNote = chord.replace(/(mi|#|b|add|sus|maj|dim|aug|6|7|9|11|13)/g, '').trim();
+    const qualities = chord.match(/(mi|dim|aug|maj|sus|add)/g) || [];
+
+    baseNote = enharmonicMap[baseNote] || baseNote;
+
+    const rootIndex = notes.indexOf(root);
+    const baseIndex = notes.indexOf(baseNote);
+
+    const degree = (baseIndex - rootIndex + 12) % 12;
+
+    const degreeToRoman = {
+        0: 'I',   // Tonic
+        2: 'ii',  // Supertonic
+        4: 'iii', // Mediant
+        5: 'IV',  // Subdominant
+        7: 'V',   // Dominant
+        9: 'vi',  // Submediant
+        11: 'vii°' // Leading tone
+    };
+
+    let romanNumeral = degreeToRoman[degree] || "?";
+    if (qualities.includes('mi') && !romanNumeral.match(/[a-z]/)) {
+        romanNumeral = romanNumeral.toLowerCase();
+    } else if (qualities.includes('dim')) {
+        romanNumeral = romanNumeral.replace('ii', 'ii°').replace('vii', 'vii°');
+    } else if (qualities.includes('aug')) {
+        romanNumeral += '+';
+    }
+
+    return romanNumeral;
+}
+
 // Accept user input from the console
 const readline = require('readline');
 const rl = readline.createInterface({
@@ -150,15 +171,19 @@ const rl = readline.createInterface({
 rl.question('Enter the new root note to transpose to: ', (newRoot) => {
     transposeAllChordSets(newRoot);
 
-    // custom formatting function and output code here
-    function formatArray(array) {
-        return '[\n  ' + array.map(item => `'${item}'`).join(', ') + ' ]';
-    }
-    
-    for (const [key, value] of Object.entries(chordSets)) {
-        console.log(`${key}: ${formatArray(value)}`);
-    }
-    // custom formatting function and output code here
-    
-    rl.close();
+    rl.question('What chord are you currently on? ', (currentChord) => {
+        let found = false;
+        for (const [setName, chordSet] of Object.entries(chordSets)) {
+            const position = chordSet.indexOf(currentChord);
+            if (position !== -1) {
+                console.log(`Chord found in set: ${setName}, position: ${position}`);
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            console.log('Chord not found in any set.');
+        }
+        rl.close();
+    });
 });
