@@ -1,5 +1,4 @@
-document.getElementById("myButton").onclick = function () {
-    root = document.getElementById("myRoot").value; //accepts root note input
+
 
     class Chord {
         constructor(pad, name, accent, quality, numeral, mode, type, smartkey) {
@@ -4063,7 +4062,3 @@ document.getElementById("myButton").onclick = function () {
     }
 
     isRoot()
-
-    document.getElementById("myLabel").innerHTML = "[4165 | I-V-ii/iii/vi-IV Progression:]";
-    // mentByIddocument.getEle("firstPad").innerHTML = chord4maj2.padData();
-}
