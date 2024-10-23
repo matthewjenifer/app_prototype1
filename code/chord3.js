@@ -316,11 +316,15 @@ if (currentKeyIndex === -1) {
 const clockwiseKey = circleOfFifths[(currentKeyIndex + 1) % circleOfFifths.length];
 const counterClockwiseKey = circleOfFifths[(currentKeyIndex - 1 + circleOfFifths.length) % circleOfFifths.length];
 
+console.log('_______________________________')
 console.log('Circle of Fifths Information:');
+console.log('_______________________________')
 console.log(`Relative Minor: ${relativeMinors[chordRoot] || 'N/A'}`);
+console.log('_______________________________')
 console.log(`Clockwise Key: ${clockwiseKey}`);
-console.log(`Relative Minor of Clockwise Key: ${relativeMinors[clockwiseKey] || 'N/A'}`);
 console.log(`Counter Clockwise Key: ${counterClockwiseKey}`);
+console.log('_______________________________')
+console.log(`Relative Minor of Clockwise Key: ${relativeMinors[clockwiseKey] || 'N/A'}`);
 console.log(`Relative Minor of Counter Clockwise Key: ${relativeMinors[counterClockwiseKey] || 'N/A'}`);
 }
 
