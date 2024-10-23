@@ -1,43 +1,71 @@
 // Define the chromatic scale to help with transposing
 const chromaticScale = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
+// Define a normalization map for enharmonic equivalents
+const enharmonicMap = {
+  'A#': 'Bb',
+  'C#': 'Db',
+  'D#': 'Eb',
+  'F#': 'Gb',
+  'G#': 'Ab',
+  'Db': 'C#',
+  'Eb': 'D#',
+  'Gb': 'F#',
+  'Ab': 'G#',
+  'Bb': 'A#'
+};
+
+// Helper function to normalize chord input
+function normalizeChord(chord) {
+  const match = chord.match(/[A-G]#?/);
+  if (match) {
+    const root = match[0];
+    const normalizedRoot = enharmonicMap[root] || root; // Convert to enharmonic equivalent if available
+    return chord.replace(root, normalizedRoot);
+  }
+  return chord;
+}
+
 // Helper function to transpose a chord with slash handling
 function transposeChord(chord, steps) {
-    // Check if the chord contains a slash (e.g., C/B)
-    if (chord.includes('/')) {
-      const [mainChord, bassNote] = chord.split('/');  // Split into main chord and bass note
-      const transposedMainChord = transposeSingleChord(mainChord, steps);  // Transpose the main chord
-      const transposedBassNote = transposeSingleChord(bassNote, steps);    // Transpose the bass note
-      return `${transposedMainChord}/${transposedBassNote}`;  // Return the transposed chord with slash
-    } else {
-      return transposeSingleChord(chord, steps);  // Transpose a regular chord
-    }
+  chord = normalizeChord(chord); // Normalize the chord before transposing
+
+  if (chord.includes('/')) {
+    const [mainChord, bassNote] = chord.split('/');
+    const transposedMainChord = transposeSingleChord(mainChord, steps);
+    const transposedBassNote = transposeSingleChord(bassNote, steps);
+    return `${transposedMainChord}/${transposedBassNote}`;
+  } else {
+    return transposeSingleChord(chord, steps);
+  }
 }
 
 // Helper function to transpose a single chord (without considering slashes)
 function transposeSingleChord(chord, steps) {
-  // Ensure the chord is valid and matches the expected pattern
-  const match = chord.match(/[A-G]#?/);  // Match root note, handle # symbols correctly
+  const match = chord.match(/[A-G]#?/);
   if (!match) {
     console.error(`Invalid chord: ${chord}`);
-    return chord; // Return the original chord if it doesn't match the expected pattern
+    return chord;
   }
 
-  let root = match[0]; // Extract the root note
-  let chordType = chord.slice(root.length); // Extract everything after the root note (chord type, including numbers)
-  let currentIndex = chromaticScale.indexOf(root); // Find the root index in the chromatic scale
+  let root = match[0];
+  let chordType = chord.slice(root.length);
+  let currentIndex = chromaticScale.indexOf(root);
 
   if (currentIndex === -1) {
     console.error(`Invalid root note: ${root}`);
-    return chord; // Return the original chord if the root note is not valid
+    return chord;
   }
 
-  let newIndex = (currentIndex + steps + 12) % 12; // Transpose the root note
-  return chromaticScale[newIndex] + chordType; // Return transposed chord
+  let newIndex = (currentIndex + steps + 12) % 12;
+  return chromaticScale[newIndex] + chordType;
 }
 
 // Function to calculate semitone difference between the original key and new key
 function calculateSteps(originalKey, newKey) {
+  originalKey = normalizeChord(originalKey);
+  newKey = normalizeChord(newKey);
+
   let originalIndex = chromaticScale.indexOf(originalKey);
   let newIndex = chromaticScale.indexOf(newKey);
   return newIndex - originalIndex;
@@ -47,10 +75,9 @@ function calculateSteps(originalKey, newKey) {
 let transposedChordSets = {};
 
 function transposeChords(songKey, originalKey = 'C') {
-    const steps = calculateSteps(originalKey, songKey);
-  
-    // Chord data for all sets provided by the user
-    const chordSets = {
+  const steps = calculateSteps(originalKey, songKey);
+
+  const chordSets = {
     MAJ1: {
       Pad1: 'C',
       Pad2: 'Emi',
@@ -288,44 +315,48 @@ function transposeChords(songKey, originalKey = 'C') {
 
 // Function to find a chord in the transposed sets
 function findChordInSets(chord) {
-for (let set in transposedChordSets) {
-  for (let pad in transposedChordSets[set]) {
-    if (transposedChordSets[set][pad] === chord) {
-      return { set, pad };
+  chord = normalizeChord(chord);
+
+  for (let set in transposedChordSets) {
+    for (let pad in transposedChordSets[set]) {
+      if (transposedChordSets[set][pad] === chord) {
+        return { set, pad };
+      }
     }
   }
-}
-return null;
+  return null;
 }
 
 // Circle of Fifths Functionality
 function circleOfFifthsOutput(chordRoot) {
-const circleOfFifths = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'Db', 'Ab', 'Eb', 'Bb', 'F'];
-const relativeMinors = {
-  'C': 'Ami', 'C#': 'A#mi', 'Db': 'Bbm', 'D': 'Bmi', 'D#': 'Cmi', 'Eb': 'Cmi',
-  'E': 'C#mi', 'F': 'Dmi', 'F#': 'D#mi', 'G': 'Emi', 'G#': 'Fmi', 'Ab': 'Fmi',
-  'A': 'F#mi', 'A#': 'Gmi', 'Bb': 'Gmi', 'B': 'G#mi'
-};
+  chordRoot = normalizeChord(chordRoot);
 
-const currentKeyIndex = circleOfFifths.indexOf(chordRoot);
-if (currentKeyIndex === -1) {
-  console.error('Invalid root note for circle of fifths.');
-  return;
-}
+  const circleOfFifths = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'Db', 'Ab', 'Eb', 'Bb', 'F'];
+  const relativeMinors = {
+    'C': 'Ami', 'C#': 'A#mi', 'Db': 'Bbm', 'D': 'Bmi', 'D#': 'Cmi', 'Eb': 'Cmi',
+    'E': 'C#mi', 'F': 'Dmi', 'F#': 'D#mi', 'G': 'Emi', 'G#': 'Fmi', 'Ab': 'Fmi',
+    'A': 'F#mi', 'A#': 'Gmi', 'Bb': 'Gmi', 'B': 'G#mi'
+  };
 
-const clockwiseKey = circleOfFifths[(currentKeyIndex + 1) % circleOfFifths.length];
-const counterClockwiseKey = circleOfFifths[(currentKeyIndex - 1 + circleOfFifths.length) % circleOfFifths.length];
+  const currentKeyIndex = circleOfFifths.indexOf(chordRoot);
+  if (currentKeyIndex === -1) {
+    console.error(`Invalid root note for circle of fifths: '${chordRoot}'`);
+    return;
+  }
 
-console.log('_______________________________')
-console.log('Circle of Fifths Information:');
-console.log('_______________________________')
-console.log(`Relative Minor: ${relativeMinors[chordRoot] || 'N/A'}`);
-console.log('_______________________________')
-console.log(`Clockwise Key: ${clockwiseKey}`);
-console.log(`Counter Clockwise Key: ${counterClockwiseKey}`);
-console.log('_______________________________')
-console.log(`Relative Minor of Clockwise Key: ${relativeMinors[clockwiseKey] || 'N/A'}`);
-console.log(`Relative Minor of Counter Clockwise Key: ${relativeMinors[counterClockwiseKey] || 'N/A'}`);
+  const clockwiseKey = circleOfFifths[(currentKeyIndex + 1) % circleOfFifths.length];
+  const counterClockwiseKey = circleOfFifths[(currentKeyIndex - 1 + circleOfFifths.length) % circleOfFifths.length];
+
+  console.log('_______________________________');
+  console.log('Circle of Fifths Information:');
+  console.log('_______________________________');
+  console.log(`Relative Minor: ${relativeMinors[chordRoot] || 'N/A'}`);
+  console.log('_______________________________');
+  console.log(`Clockwise Key: ${clockwiseKey}`);
+  console.log(`Counter Clockwise Key: ${counterClockwiseKey}`);
+  console.log('_______________________________');
+  console.log(`Relative Minor of Clockwise Key: ${relativeMinors[clockwiseKey] || 'N/A'}`);
+  console.log(`Relative Minor of Counter Clockwise Key: ${relativeMinors[counterClockwiseKey] || 'N/A'}`);
 }
 
 // Function to request chord input and display Circle of Fifths info
