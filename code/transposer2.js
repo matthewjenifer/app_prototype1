@@ -149,6 +149,16 @@ const rl = readline.createInterface({
 
 rl.question('Enter the new root note to transpose to: ', (newRoot) => {
     transposeAllChordSets(newRoot);
-    console.log('Transposed Chord Sets:', chordSets);
+
+    // custom formatting function and output code here
+    function formatArray(array) {
+        return '[\n  ' + array.map(item => `'${item}'`).join(', ') + ' ]';
+    }
+    
+    for (const [key, value] of Object.entries(chordSets)) {
+        console.log(`${key}: ${formatArray(value)}`);
+    }
+    // custom formatting function and output code here
+    
     rl.close();
 });
