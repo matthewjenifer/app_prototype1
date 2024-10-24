@@ -227,8 +227,8 @@
         const relativeMajorsMinors = {
             'C': 'Ami',
             'Ami': 'C',
-            'C#': 'A#mi',
-            'A#mi': 'C#',
+            'C#': 'Bbmi',
+            'A#mi': 'Db',
             'Db': 'Bbmi',
             'Bbmi': 'Db',
             'D': 'Bmi',
