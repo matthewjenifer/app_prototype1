@@ -142,7 +142,9 @@
             const transposedChord = transposeChord(
                 intervalData.interval, intervalData.qualities, newRoot, intervalData.bassInterval
             );
+            console.log('------------------------------------------------------------------------------------------------')
             console.log(`Debug - Transposed Chord: Original: ${chord}, Transposed: ${transposedChord}`);
+            console.log('------------------------------------------------------------------------------------------------')
 
             transposedSet.push(transposedChord);
         }
@@ -292,52 +294,74 @@
         } = transposeAllChordSets(newRoot);
 
         // Debugging log for transposed chord sets with suffixes
+        console.log('------------------------------------------------------------------------------------------------')
         console.log('Debug - Transposed Chord Sets with Suffixes:', transposedChordSetsWithSuffixes);
-
+        console.log('------------------------------------------------------------------------------------------------')
+        
         // Debugging log for transposed simplified chord sets
+        console.log('------------------------------------------------------------------------------------------------')
         console.log('Debug - Transposed Simplified Chord Sets:', transposedChordSetsSimplified);
-
+        console.log('------------------------------------------------------------------------------------------------')
+        
         // Print the transposed chord sets with suffixes to the console
+        console.log('------------------------------------------------------------------------------------------------')
         console.log('Transposed Chord Sets with Suffixes:');
+        console.log('------------------------------------------------------------------------------------------------')
         for (const [setName, transposedSet] of Object.entries(transposedChordSetsWithSuffixes)) {
+            console.log('------------------------------------------------------------------------------------------------')
             console.log(`${setName}: ${transposedSet.join(', ')}`);
+            console.log('------------------------------------------------------------------------------------------------')
         }
-
+        
         rl.question('What chord are you currently on? ', (currentChord) => {
+            console.log('------------------------------------------------------------------------------------------------')
             console.log(`Debug - Original Current Chord Input: ${currentChord}`);
-
+            console.log('------------------------------------------------------------------------------------------------')
+            
             try {
                 let found = false;
                 let setNameFound = '';
                 let positionFound = -1;
-
+                
                 // Search in the transposed chord sets with suffixes (no need to simplify here)
                 for (const [setName, chordSet] of Object.entries(transposedChordSetsWithSuffixes)) {
                     for (let i = 0; i < chordSet.length; i++) {
+                        console.log('------------------------------------------------------------------------------------------------')
                         console.log(`Debug - Original Set Chord: ${chordSet[i]}`);
-
+                        console.log('------------------------------------------------------------------------------------------------')
+                        
                         // Compare directly with the complex version
                         if (chordSet[i] === currentChord) {
                             setNameFound = setName;
                             positionFound = i;
+                            console.log('------------------------------------------------------------------------------------------------')
                             console.log(`Chord found in set: ${setName}, position: ${i}`);
+                            console.log('------------------------------------------------------------------------------------------------')
                             found = true;
                             break;
                         }
                     }
                     if (found) break;
                 }
-
+                
                 if (!found) {
+                    console.log('------------------------------------------------------------------------------------------------')
                     console.log('Chord not found in any set.');
+                    console.log('------------------------------------------------------------------------------------------------')
                 } else {
                     // Use the simplified version to determine the relative chord
                     const simplifiedCurrentChord = simplifyChordName(currentChord);
+                    console.log('------------------------------------------------------------------------------------------------')
                     console.log(`Debug - Simplified Chord for Relative Lookup: ${simplifiedCurrentChord}`);
+                    console.log('------------------------------------------------------------------------------------------------')
                     const relativeChord = getRelativeChord(simplifiedCurrentChord);
+                    console.log('------------------------------------------------------------------------------------------------')
                     console.log(`Debug - Relative Chord Found: ${relativeChord}`);
-
+                    console.log('------------------------------------------------------------------------------------------------')
+                    
+                    console.log('------------------------------------------------------------------------------------------------')
                     console.log(`The relative chord is: ${relativeChord}`);
+                    console.log('------------------------------------------------------------------------------------------------')
                 }
             } catch (error) {
                 console.error(error.message);
