@@ -132,9 +132,12 @@ function getRelativeChord(chord) {
         'C#': 'Db', 'D#': 'Eb', 'F#': 'Gb', 'G#': 'Ab', 'A#': 'Bb'
     };
     let baseNote = chord.replace(/\(.*?\)/g, ''); // Remove text inside parentheses
-    baseNote = baseNote.replace(/(mi|min|maj|ma|dim|aug|sus|add|alt|#|b|6|7|9|11|13|madd9|b5|#5|6\/9|[0-9])/g, '').trim();
+const isMinor = /(mi|min|m|mi7|mi9|mi11|mi6|mi7\(b5\))/.test(chord);
+    if (!isMinor) {
+    baseNote = baseNote.replace(/(maj|ma|dim|aug|sus|add|alt|#|b|6|7|9|11|13|madd9|b5|#5|6\/9|[0-9])/g, '').trim();
+}
+
     baseNote = enharmonicMap[baseNote] || baseNote;
-    const isMinor = /(mi|min|m|mi7|mi9|mi11|mi6)/.test(chord);
 
     // Special handling for chords with specific suffixes
     if (/^(Ami7|Ami11|Ami\/E)$/.test(chord)) {
@@ -166,20 +169,23 @@ function getAdjacentChords(chord) {
     };
 
     let baseNote = chord.replace(/\(.*?\)/g, ''); // Remove text inside parentheses
-    baseNote = baseNote.replace(/(mi|min|maj|ma|dim|aug|sus|add|alt|#|b|6|7|9|11|13|madd9|b5|#5|6\/9|[0-9])/g, '').trim();
+const isMinor = /(mi|min|m|mi7|mi9|mi11|mi6|mi7\(b5\))/.test(chord);
+if (!isMinor) {
+    baseNote = baseNote.replace(/(maj|ma|dim|aug|sus|add|alt|#|b|6|7|9|11|13|madd9|b5|#5|6\/9|[0-9])/g, '').trim();
+}
+
     baseNote = enharmonicMap[baseNote] || baseNote;
-    const isMinor = /(mi|min|m)/.test(chord);
 
     // Special handling for chords with specific suffixes
     if (/^(Ami7|Ami11|Ami\/E)$/.test(chord)) {
-        baseNote = 'Am';
-    } else if (/^(Bbmi7\(b5\))$/.test(chord)) {
-        baseNote = 'Bbm';
-    } else if (/^(Dmi7|Dmi9|Dmi11|Dmi7\(b5\)|Dmi\/C)$/.test(chord)) {
-        baseNote = 'Dm';
-    } else if (/^(Fmi\/Ab|Cmi\/Eb|Cmi11\/G|Cmi6\/9|Cmi9)$/.test(chord)) {
-        baseNote = 'Cm';
-    }
+    baseNote = 'Am';
+} else if (/^(Bbmi7\(b5\))$/.test(chord)) {
+    baseNote = 'Bbm';
+} else if (/^(Dmi7|Dmi9|Dmi11|Dmi7\(b5\)|Dmi\/C)$/.test(chord)) {
+    baseNote = 'Dm';
+} else if (/^(Fmi\/Ab|Cmi\/Eb|Cmi11\/G|Cmi6\/9|Cmi9)$/.test(chord)) {
+    baseNote = 'Cm';
+}
 
     let majorKey = baseNote;
 
