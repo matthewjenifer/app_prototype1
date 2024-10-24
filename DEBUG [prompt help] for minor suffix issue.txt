@@ -1,0 +1,17 @@
+how can we update bass note extraction to recognize the following chords as minor?:
+
+Ami7
+Dmi7
+Cmi11
+Cmi9
+Cmi6/9
+Dmi7(b5)
+Bbmi7(b5)
+
+
+
+... in other words, when 'mi' is found in the base note extraction it should treat that value as a minor key/chord
+
+'Bbmi7(b5)' should register as 'Bbmi'
+'Dmi7(b5)' should register as 'Dmi'
+'Cmi6/9' should register as 'Cmi'

@@ -1,0 +1,151 @@
+Transposed Chord errors:
+
+MAJ1
+
+Debug - Transposed Chord: Original: Esus4, Transposed: F#
+Debug - Transposed Chord: Original: Gadd9, Transposed: A
+Debug - Transposed Chord: Original: Fadd9, Transposed: G
+Debug - Transposed Chord: Original: F6, Transposed: G
+Debug - Transposed Chord: Original: Gsus4, Transposed: A
+
+MAJ2
+
+Debug - Transposed Chord: Original: Fadd9, Transposed: G
+Debug - Transposed Chord: Original: Csus4, Transposed: D
+Debug - Transposed Chord: Original: Gsus4, Transposed: A
+Debug - Transposed Chord: Original: G6, Transposed: A
+
+MAJ3
+
+Debug - Transposed Chord: Original: Fma7, Transposed: G
+Debug - Transposed Chord: Original: Gsus4, Transposed: A
+Debug - Transposed Chord: Original: Ami add9, Transposed: Bmi
+Debug - Transposed Chord: Original: F6, Transposed: G
+Debug - Transposed Chord: Original: Csus2, Transposed: Dsus
+Debug - Transposed Chord: Original: Dsus2, Transposed: Esus
+Debug - Transposed Chord: Original: Bb add9, Transposed: C#b
+Debug - Transposed Chord: Original: Gsus4, Transposed: A
+Debug - Transposed Chord: Original: Fadd9, Transposed: G
+
+MAJ4
+
+Debug - Transposed Chord: Original: F6, Transposed: G
+Debug - Transposed Chord: Original: Dmi7, Transposed: Emi
+Debug - Transposed Chord: Original: Gadd9, Transposed: A
+Debug - Transposed Chord: Original: Ami7, Transposed: Bmi
+
+MAJ5
+
+Debug - Transposed Chord: Original: Eb, Transposed: F#b
+Debug - Transposed Chord: Original: Bb, Transposed: C#b
+Debug - Transposed Chord: Original: G7sus4, Transposed: A7
+Debug - Transposed Chord: Original: Bb add9, Transposed: C#b
+Debug - Transposed Chord: Original: F6, Transposed: G
+Debug - Transposed Chord: Original: Cadd9, Transposed: D
+
+MAJ6
+
+Debug - Transposed Chord: Original: Ami7, Transposed: Bmi
+Debug - Transposed Chord: Original: Dmi7, Transposed: Emi
+Debug - Transposed Chord: Original: Emi7, Transposed: F#mi
+Debug - Transposed Chord: Original: Gsus4, Transposed: A
+
+MAJ8
+
+Debug - Transposed Chord: Original: Cma9, Transposed: D
+Debug - Transposed Chord: Original: C#dim, Transposed: D#
+Debug - Transposed Chord: Original: Dmi9, Transposed: Emi
+Debug - Transposed Chord: Original: D#dim7, Transposed: E#dim
+Debug - Transposed Chord: Original: Emi9, Transposed: F#mi
+Debug - Transposed Chord: Original: C9#5, Transposed: D9
+Debug - Transposed Chord: Original: Fma7(add13), Transposed: G7
+Debug - Transposed Chord: Original: Bb9, Transposed: C#b
+Debug - Transposed Chord: Original: Emi7, Transposed: F#mi
+Debug - Transposed Chord: Original: A9, Transposed: B
+Debug - Transposed Chord: Original: Dmi11, Transposed: Emi
+Debug - Transposed Chord: Original: G7(b9, b13), Transposed: A
+
+MIN1
+
+Debug - Transposed Chord: Original: Cmi/Eb, Transposed: Dmib/E
+Debug - Transposed Chord: Original: Abma7, Transposed: Bb
+Debug - Transposed Chord: Original: Eb, Transposed: F#b
+Debug - Transposed Chord: Original: Bb, Transposed: C#b
+Debug - Transposed Chord: Original: Fmi/Ab, Transposed: Gmib/A
+
+MIN2
+
+Debug - Transposed Chord: Original: Cmi/Bb, Transposed: Dmib/B
+Debug - Transposed Chord: Original: Cmi/A, Transposed: Dmi/B
+Debug - Transposed Chord: Original: Abma7, Transposed: Bb
+Debug - Transposed Chord: Original: Ebma7, Transposed: F#b
+Debug - Transposed Chord: Original: Bb7, Transposed: C#b
+Debug - Transposed Chord: Original: Bb add9, Transposed: C#b
+Debug - Transposed Chord: Original: Ab add9, Transposed: Bb
+Debug - Transposed Chord: Original: G7sus4, Transposed: A7
+
+MIN3
+
+Debug - Transposed Chord: Original: Eb, Transposed: F#b
+Debug - Transposed Chord: Original: Bb, Transposed: C#b
+Debug - Transposed Chord: Original: Gsus4, Transposed: A
+Debug - Transposed Chord: Original: Cmi#5, Transposed: Dmi
+Debug - Transposed Chord: Original: Cmi6, Transposed: Dmi
+Debug - Transposed Chord: Original: Cmi7, Transposed: Dmi
+
+MIN4
+
+Debug - Transposed Chord: Original: Eb, Transposed: F#b
+Debug - Transposed Chord: Original: Bb, Transposed: C#b
+Debug - Transposed Chord: Original: Abma7, Transposed: Bb
+Debug - Transposed Chord: Original: Abmi7, Transposed: Bbmi
+Debug - Transposed Chord: Original: Ebma7, Transposed: F#b
+Debug - Transposed Chord: Original: Dsus4, Transposed: E
+
+MIN5
+
+Debug - Transposed Chord: Original: Bb, Transposed: C#b
+Debug - Transposed Chord: Original: Ab6, Transposed: Bb
+Debug - Transposed Chord: Original: Bb add9, Transposed: C#b
+Debug - Transposed Chord: Original: Dmi7, Transposed: Emi
+Debug - Transposed Chord: Original: Cmi/Eb, Transposed: Dmib/E
+Debug - Transposed Chord: Original: Ab ma7, Transposed: Bb
+Debug - Transposed Chord: Original: B6/9, Transposed: C#6
+Debug - Transposed Chord: Original: Csus4, Transposed: D
+
+MIN6
+
+Debug - Transposed Chord: Original: Bb, Transposed: C#b
+Debug - Transposed Chord: Original: Eb, Transposed: F#b
+Debug - Transposed Chord: Original: Dmi7(b5), Transposed: Emi
+Debug - Transposed Chord: Original: Gadd(b9), Transposed: A
+Debug - Transposed Chord: Original: G7, Transposed: A
+
+MIN7
+
+Debug - Transposed Chord: Original: Cmi9, Transposed: Dmi
+Debug - Transposed Chord: Original: Ab9, Transposed: Bb
+Debug - Transposed Chord: Original: Cmi11, Transposed: Dmi
+Debug - Transposed Chord: Original: C7(#9, b13), Transposed: D
+Debug - Transposed Chord: Original: Fmi9, Transposed: Gmi
+Debug - Transposed Chord: Original: Ebma7/F, Transposed: F#b7/G
+Debug - Transposed Chord: Original: C11, Transposed: D
+Debug - Transposed Chord: Original: Ami11, Transposed: Bmi
+Debug - Transposed Chord: Original: Ab7#11, Transposed: Bb7#
+Debug - Transposed Chord: Original: G7#9, Transposed: A7#
+Debug - Transposed Chord: Original: Cmi add9, Transposed: Dmi
+Debug - Transposed Chord: Original: G7(b9, b13), Transposed: A
+
+MIN8
+
+Debug - Transposed Chord: Original: Cmi6/9, Transposed: Dmi6
+Debug - Transposed Chord: Original: Dmi7(b5), Transposed: Emi
+Debug - Transposed Chord: Original: Cmi9, Transposed: Dmi
+Debug - Transposed Chord: Original: Fmi9, Transposed: Gmi
+Debug - Transposed Chord: Original: Abmi7, Transposed: Bbmi
+Debug - Transposed Chord: Original: Ebmi7, Transposed: F#bmi
+Debug - Transposed Chord: Original: Bbmi7(b5), Transposed: C#bmi
+Debug - Transposed Chord: Original: Ami11, Transposed: Bmi
+Debug - Transposed Chord: Original: Abma7#5, Transposed: Bb7
+Debug - Transposed Chord: Original: G7(b9, b13), Transposed: A
+Debug - Transposed Chord: Original: Cmi9 ma7, Transposed: Dmi9

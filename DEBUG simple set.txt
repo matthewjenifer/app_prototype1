@@ -1,0 +1,110 @@
+Debug - Transposed Simplified Chord Sets: {
+  MAJ1: [
+    'D', 'F#mi', 'G',
+    'A', 'Bmi',  'F#',
+    'A', 'Emi',  'G',
+    'G', 'A',    'A'
+  ],
+  MAJ2: [
+    'D',   'D/C#', 'D/B',
+    'D/A', 'G',    'Gmi',
+    'D',   'Bmi',  'F#mi',
+    'G',   'A',    'A'
+  ],
+  MAJ3: [
+    'D',    'Bmi', 'G',
+    'A',    'Bmi', 'G',
+    'Dsus', 'A',   'Esus',
+    'C#b',  'A',   'G'
+  ],
+  MAJ4: [
+    'D',    'A',
+    'Bmi',  'G',
+    'G',    'Bmi/F#',
+    'Emi',  'Bmi/D',
+    'A',    'Bmi',
+    'A/C#', 'Emi/A'
+  ],
+  MAJ5: [
+    'D',   'E',  'G',
+    'D',   'Bb', 'F#b',
+    'C#b', 'G',  'A',
+    'C#b', 'G',  'D'
+  ],
+  MAJ6: [
+    'D',    'A',   'Emi',
+    'Bmi',  'G',   'A/G',
+    'D/F#', 'Bmi', 'Emi',
+    'F#mi', 'D/G', 'A'
+  ],
+  MAJ7: [
+    'D',    'A',     'Bmi',
+    'F#mi', 'G',     'D/F#',
+    'Emi',  'Emi/D', 'A7/C#',
+    'A',    'G/B',   'A7/C#'
+  ],
+  MAJ8: [
+    'D',  'D#',   'Emi',
+    'E#', 'F#mi', 'D',
+    'G',  'C#b',  'F#mi',
+    'B',  'Emi',  'A'
+  ],
+  MIN1: [
+    'Dmi',   'Dmib/E',
+    'Gmi',   'A',
+    'Bb',    'F#b',
+    'Ami',   'C#b',
+    'G',     'Gmib/A',
+    'Dmi/A', 'A'
+  ],
+  MIN2: [
+    'Dmi',    'A+/C#',
+    'Dmib/B', 'Dmi/B',
+    'Bb',     'F#b',
+    'Gmi',    'C#b',
+    'Dmi',    'C#b',
+    'Bb',     'A'
+  ],
+  MIN3: [
+    'Dmi',   'Bb',  'F#b',
+    'C#b',   'G',   'Gmi',
+    'Dmi/A', 'A',   'Dmi',
+    'Dmi',   'Dmi', 'Dmi'
+  ],
+  MIN4: [
+    'Dmi',  'F#b',   'C#b',
+    'G',    'Bb',    'Bb',
+    'Bbmi', 'F#b',   'E',
+    'E',    'Gmi/A', 'A+'
+  ],
+  MIN5: [
+    'Dmi',    'C#b',
+    'Bb',     'C#b',
+    'Dmi',    'Emi',
+    'Dmib/E', 'Gmi',
+    'A',      'Bb',
+    'C#',     'D'
+  ],
+  MIN6: [
+    'Dmi', 'Gmi',   'C#b',
+    'F#b', 'Bb',    'Emi',
+    'A',   'A',     'Bb/A',
+    'A',   'Dmi/A', 'A7b'
+  ],
+  MIN7: [
+    'Dmi',  'Bb',
+    'Dmi',  'D',
+    'Gmi',  'F#b7/G',
+    'D',    'Bmi',
+    'Bb7#', 'A7#',
+    'Dmi',  'A'
+  ],
+  MIN8: [
+    'Dmi',     'Emi',
+    'Dmi11/A', 'Dmi',
+    'Gmi',     'Bbmi',
+    'F#bmi',   'C#bmi',
+    'Bmi',     'Bb',
+    'A',       'Dmi'
+  ]
+}
