@@ -32,9 +32,11 @@
             bassNote = bassNote.replace(/[0123456789#b]/g, '').trim();
         }
 
-        baseNote = baseNote.replace(/[0123456789#bmiaddsus\(\),\+]/g, '').trim();
+        // Remove text inside parentheses, e.g., "(add13)"
+        baseNote = baseNote.replace(/\(.*?\)/g, '');
+        baseNote = baseNote.replace(/(mi|min|maj|ma|dim|aug|sus|add|alt|#|b|6|7|9|11|13|\+|madd9|b5|#5|6\/9|[0-9])/g, '').trim();
         const normalizedBaseNote = enharmonicMap[baseNote] || baseNote;
-        const qualities = chord.match(/(mi|sus|add|maj|dim|aug|6|7|9|11|13|b|#|\+)/g) || [];
+        const qualities = chord.match(/(mi|min|maj|ma|sus|add|dim|aug|alt|6|7|9|11|13|b|#|\+|madd9|b5|#5|6\/9)/g) || [];
 
         const rootIndex = notes.indexOf(root);
         if (!notes.includes(normalizedBaseNote)) {
@@ -52,11 +54,7 @@
             bassInterval = (bassIndex - rootIndex + 12) % 12;
         }
 
-        return {
-            interval,
-            qualities,
-            bassInterval
-        };
+        return { interval, qualities, bassInterval };
     }
 
     // Function to simplify chord names by removing complex suffixes
@@ -76,7 +74,6 @@
 
         return chord;
     }
-
 
     // Function to transpose a chord
     function transposeChord(interval, qualities, newRoot, bassInterval = null) {
@@ -132,7 +129,6 @@
             transposedChordSetsSimplified
         };
     }
-
 
     // Function to transpose a single chord set
     function transposeChordSet(chordSet, originalRoot, newRoot) {
@@ -262,6 +258,10 @@
             'B': 'G#mi',
             'G#mi': 'B'
         };
+        const enharmonicMap = {
+            'Db': 'C#', 'Eb': 'D#', 'Gb': 'F#', 'Ab': 'G#', 'Bb': 'A#',
+            'C#': 'Db', 'D#': 'Eb', 'F#': 'Gb', 'G#': 'Ab', 'A#': 'Bb'
+        };
 
         // Simplify the chord to match the base version
         const simplifiedChord = simplifyChordName(currentChord);
@@ -277,7 +277,69 @@
         }
     }
 
+    // CIRCLE OF FIFTHS
 
+    function getAdjacentChords(chord) { // Function to get the clockwise and counterclockwise chords from the circle of fifths
+        const circleOfFifths = [
+            'C', 'G', 'D', 'A', 'E', 'B', 'Gb', 'Db', 'Ab', 'Eb', 'Bb', 'F'
+        ];
+        const minorMap = {
+            'C': 'Am', 'G': 'Em', 'D': 'Bm', 'A': 'F#m', 'E': 'C#m',
+            'B': 'G#m', 'Gb': 'Ebm', 'Db': 'Bbm', 'Ab': 'Fm', 'Eb': 'Cm',
+            'Bb': 'Gm', 'F': 'Dm'
+        };
+        const enharmonicMap = {
+            'Db': 'C#', 'Eb': 'D#', 'Gb': 'F#', 'Ab': 'G#', 'Bb': 'A#',
+            'C#': 'Db', 'D#': 'Eb', 'F#': 'Gb', 'G#': 'Ab', 'A#': 'Bb'
+        };
+
+        let baseNote = chord.replace(/\(.*?\)/g, ''); // Remove text inside parentheses
+        const isMinor = /(mi|min|m|mi7|mi9|mi11|mi6|mi7\(b5\))/.test(chord);
+        if (!isMinor) {
+            baseNote = baseNote.replace(/(maj|ma|dim|aug|sus|add|alt|#|b|6|7|9|11|13|madd9|b5|#5|6\/9|[0-9])/g, '').trim();
+        }
+
+        baseNote = enharmonicMap[baseNote] || baseNote;
+
+        // Special handling for chords with specific suffixes
+        if (/^(Ami7|Ami11|Ami\/E)$/.test(chord)) {
+            baseNote = 'Am';
+        } else if (/^(Bbmi7\(b5\))$/.test(chord)) {
+            baseNote = 'Bbm';
+        } else if (/^(Dmi7|Dmi9|Dmi11|Dmi7\(b5\)|Dmi\/C)$/.test(chord)) {
+            baseNote = 'Dm';
+        } else if (/^(Fmi\/Ab|Cmi\/Eb|Cmi11\/G|Cmi6\/9|Cmi9)$/.test(chord)) {
+            baseNote = 'Cm';
+        }
+
+        let majorKey = baseNote;
+
+        // If the chord is minor, use the minor key directly
+        if (isMinor) {
+            majorKey = baseNote + 'm';
+        }
+
+        // Convert majorKey to enharmonic equivalent if needed
+        majorKey = enharmonicMap[majorKey] || majorKey;
+
+        // If majorKey is not found in circleOfFifths, return null values
+        const index = circleOfFifths.indexOf(majorKey.replace('m', ''));
+        if (index === -1) {
+            return {
+                clockwiseMajor: null,
+                counterClockwiseMajor: null,
+                clockwiseMinor: null,
+                counterClockwiseMinor: null
+            };
+        }
+
+        const clockwiseMajor = circleOfFifths[(index + 1) % circleOfFifths.length];
+        const counterClockwiseMajor = circleOfFifths[(index - 1 + circleOfFifths.length) % circleOfFifths.length];
+        const clockwiseMinor = minorMap[clockwiseMajor];
+        const counterClockwiseMinor = minorMap[counterClockwiseMajor];
+
+        return { clockwiseMajor, counterClockwiseMajor, clockwiseMinor, counterClockwiseMinor };
+    }
 
     // Accept user input from the console
     const readline = require('readline');
@@ -297,12 +359,12 @@
         console.log('------------------------------------------------------------------------------------------------')
         console.log('Debug - Transposed Chord Sets with Suffixes:', transposedChordSetsWithSuffixes);
         console.log('------------------------------------------------------------------------------------------------')
-        
+
         // Debugging log for transposed simplified chord sets
         console.log('------------------------------------------------------------------------------------------------')
         console.log('Debug - Transposed Simplified Chord Sets:', transposedChordSetsSimplified);
         console.log('------------------------------------------------------------------------------------------------')
-        
+
         // Print the transposed chord sets with suffixes to the console
         console.log('------------------------------------------------------------------------------------------------')
         console.log('Transposed Chord Sets with Suffixes:');
@@ -312,60 +374,55 @@
             console.log(`${setName}: ${transposedSet.join(', ')}`);
             console.log('------------------------------------------------------------------------------------------------')
         }
-        
+
         rl.question('What chord are you currently on? ', (currentChord) => {
-            console.log('------------------------------------------------------------------------------------------------')
+            console.log('------------------------------------------------------------------------------------------------');
             console.log(`Debug - Original Current Chord Input: ${currentChord}`);
-            console.log('------------------------------------------------------------------------------------------------')
-            
+            console.log('------------------------------------------------------------------------------------------------');
+
             try {
                 let found = false;
                 let setNameFound = '';
                 let positionFound = -1;
-                
+
                 // Search in the transposed chord sets with suffixes (no need to simplify here)
                 for (const [setName, chordSet] of Object.entries(transposedChordSetsWithSuffixes)) {
                     for (let i = 0; i < chordSet.length; i++) {
-                        console.log('------------------------------------------------------------------------------------------------')
-                        console.log(`Debug - Original Set Chord: ${chordSet[i]}`);
-                        console.log('------------------------------------------------------------------------------------------------')
-                        
                         // Compare directly with the complex version
                         if (chordSet[i] === currentChord) {
                             setNameFound = setName;
                             positionFound = i;
-                            console.log('------------------------------------------------------------------------------------------------')
-                            console.log(`Chord found in set: ${setName}, position: ${i}`);
-                            console.log('------------------------------------------------------------------------------------------------')
                             found = true;
                             break;
-                        }
                     }
-                    if (found) break;
                 }
-                
-                if (!found) {
-                    console.log('------------------------------------------------------------------------------------------------')
-                    console.log('Chord not found in any set.');
-                    console.log('------------------------------------------------------------------------------------------------')
-                } else {
-                    // Use the simplified version to determine the relative chord
-                    const simplifiedCurrentChord = simplifyChordName(currentChord);
-                    console.log('------------------------------------------------------------------------------------------------')
-                    console.log(`Debug - Simplified Chord for Relative Lookup: ${simplifiedCurrentChord}`);
-                    console.log('------------------------------------------------------------------------------------------------')
-                    const relativeChord = getRelativeChord(simplifiedCurrentChord);
-                    console.log('------------------------------------------------------------------------------------------------')
-                    console.log(`Debug - Relative Chord Found: ${relativeChord}`);
-                    console.log('------------------------------------------------------------------------------------------------')
-                    
-                    console.log('------------------------------------------------------------------------------------------------')
-                    console.log(`The relative chord is: ${relativeChord}`);
-                    console.log('------------------------------------------------------------------------------------------------')
-                }
-            } catch (error) {
-                console.error(error.message);
+                if (found) break;
             }
-            rl.close();
-        });
+
+            if (!found) {
+                console.log('------------------------------------------------------------------------------------------------');
+                console.log('Chord not found in any set.');
+                console.log('------------------------------------------------------------------------------------------------');
+            } else {
+                // Find the mirrored position from the simplified set
+                const simplifiedChord = transposedChordSetsSimplified[setNameFound][positionFound];
+                console.log('------------------------------------------------------------------------------------------------');
+                console.log(`Debug - Simplified Chord for Circle of Fifths Lookup: ${simplifiedChord}`);
+                console.log('------------------------------------------------------------------------------------------------');
+
+                // Use the simplified chord to get adjacent chords from the circle of fifths
+                const relativeInfo = getAdjacentChords(simplifiedChord);
+                console.log('------------------------------------------------------------------------------------------------');
+                console.log(`Relative Major/Minor: ${getRelativeChord(simplifiedChord)}`);
+                console.log(`Clockwise Major: ${relativeInfo.clockwiseMajor}`);
+                console.log(`CounterClockwise Major: ${relativeInfo.counterClockwiseMajor}`);
+                console.log(`Clockwise Minor: ${relativeInfo.clockwiseMinor}`);
+                console.log(`CounterClockwise Minor: ${relativeInfo.counterClockwiseMinor}`);
+                console.log('------------------------------------------------------------------------------------------------');
+            }
+        } catch (error) {
+            console.error(error.message);
+        }
+        rl.close();
+    });
     });
